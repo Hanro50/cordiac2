@@ -1,0 +1,21 @@
+# The bot token fot the discord bot.
+token: Token here
+# Should we show join messages?
+showJoinMessages: true
+# Should we show leave messages?
+showLeaveMessages: true
+# Should we show messages related to a player being killed?
+showDeathMessages: true 
+# Should we pop up a message for when a player collects an advancement?
+showAdvancementMessages: true 
+# Should we force individual players?
+forceLink: false
+# What language should the bot use?
+language: en_gb
+format: <%username%> %message%
+versionOverride: "default"
+report:
+ - grief
+ - inappropriate_build
+ - theft
+ - dispute

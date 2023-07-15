@@ -1,0 +1,24 @@
+main: za.net.hanro50.cordiac.App
+name: Cordiac
+version: 1.0-SNAPSHOT
+description: A simple discord - spigot bridge plugin
+api-version: '1.16'
+load: STARTUP
+author: Hanro50
+prefix: Cordiac
+commands:
+   link:
+      description: Link your Discord and Minecraft Account
+      usage: /<command>
+      default: true
+   unlink:
+      description: Unlink your Discord and Minecraft Account
+      usage: /<command>
+      default: true
+   report:
+      description: Report something to staff
+      usage: /<command> [grief|player] [additional information]
+      default: true
+libraries:
+  - net.dv8tion:JDA:5.0.0-beta.12
+  - club.minnced:discord-webhooks:0.8.2
