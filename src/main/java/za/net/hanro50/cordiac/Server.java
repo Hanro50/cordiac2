@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -54,9 +55,15 @@ public class Server extends ListenerAdapter {
   private ApplicationInfo info;
   private JDAWebhookClient client;
   private Parser parser;
+
   Guild tmpGuild;
   TextChannel tmpChannel;
   TextChannel tmpLogChannel;
+
+
+  public Map<UUID, Long> getLinks() {
+    return new HashMap<>(userLink);
+  }
 
   public boolean isLinked(UUID uuid) {
     return userLink.containsKey(uuid);
@@ -174,7 +181,7 @@ public class Server extends ListenerAdapter {
     }
   }
 
-  void getName(BasePlayer player, Consumer<DiscordPlayer> dPlayer) {
+  public void getName(BasePlayer player, Consumer<DiscordPlayer> dPlayer) {
     Long memberLong = userLink.get(player.uuid);
     if (memberLong != null) {
       Guild guild = jda.getGuildById(data.Server);

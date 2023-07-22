@@ -1,6 +1,6 @@
 main: za.net.hanro50.cordiac.App
 name: Cordiac
-version: 1.0-SNAPSHOT
+version: 1.1-SNAPSHOT
 description: A simple discord - spigot bridge plugin
 api-version: '1.16'
 load: STARTUP
@@ -18,6 +18,10 @@ commands:
    report:
       description: Report something to staff
       usage: /<command> [grief|player] [additional information]
+      default: true
+   whois:
+      description: Who is a set member on the discord server
+      usage: /<command> [player]
       default: true
 libraries:
   - net.dv8tion:JDA:5.0.0-beta.12

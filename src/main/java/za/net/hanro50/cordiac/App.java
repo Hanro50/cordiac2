@@ -32,9 +32,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.projectiles.ProjectileSource;
 
+import net.md_5.bungee.api.chat.TextComponent;
 import za.net.hanro50.cordiac.commands.Link;
 import za.net.hanro50.cordiac.commands.Report;
 import za.net.hanro50.cordiac.commands.Unlink;
+import za.net.hanro50.cordiac.commands.WhoIs;
 import za.net.hanro50.cordiac.lang.Mappings;
 import za.net.hanro50.cordiac.players.BasePlayer;
 
@@ -63,6 +65,7 @@ public class App extends JavaPlugin implements Listener {
     new Link(this);
     new Unlink(this);
     new Report(this);
+    new WhoIs(this);
   }
 
   @Override
@@ -108,6 +111,7 @@ public class App extends JavaPlugin implements Listener {
   }
 
   public void sendMessage(UUID user, String message) {
+
     getPlayer(user, (BasePlayer player) -> sendMessage(player.name, message));
   }
 
@@ -122,7 +126,7 @@ public class App extends JavaPlugin implements Listener {
   void onPlayerJoin(PlayerJoinEvent e) {
     Player sender = e.getPlayer();
     if (Config.forceLink() && !discord.isLinked(sender.getUniqueId())) {
-      
+
       sender.kickPlayer("This server requires you to link your discord account!\nDM the bot this code to rejoin ["
           + this.discord.requestLink(sender.getUniqueId()) + "]");
       return;
