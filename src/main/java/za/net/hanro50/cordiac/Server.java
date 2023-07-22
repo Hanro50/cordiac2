@@ -58,7 +58,7 @@ public class Server extends ListenerAdapter {
   TextChannel tmpChannel;
   TextChannel tmpLogChannel;
 
-  public boolean isLinked(UUID uuid){
+  public boolean isLinked(UUID uuid) {
     return userLink.containsKey(uuid);
   }
 
@@ -85,7 +85,7 @@ public class Server extends ListenerAdapter {
   TextChannel getLogChannel() throws ConfigurationException {
     if (data.logChannel == null)
       throw new ConfigurationException("Config not set");
-    if (tmpChannel == null || tmpLogChannel.getIdLong() != data.logChannel) {
+    if (tmpLogChannel == null || tmpLogChannel.getIdLong() != data.logChannel) {
       tmpLogChannel = getGuild().getTextChannelById(data.logChannel);
 
     }
@@ -224,14 +224,17 @@ public class Server extends ListenerAdapter {
   }
 
   void sendAdvancement(DiscordPlayer player, String namespace) {
-    if (!Config.showAdvancementMessages())
+    String name = namespace + ".title";
+    String disc = namespace + ".description";
+    if (!Config.showAdvancementMessages() || !parser.has(name))
       return;
 
     EmbedBuilder emb = new EmbedBuilder();
     emb.setAuthor(player.name, player.link,
         player.avatar);
-    emb.setTitle(parser.parse(namespace + ".title"));
-    emb.setDescription(parser.parse(namespace + ".description"));
+    emb.setTitle(parser.parse(name));
+    if (parser.has(disc))
+      emb.setDescription(parser.parse(disc));
     emb.setColor(getColour(namespace));
     try {
       getChannel().sendMessageEmbeds(emb.build()).submit();
@@ -434,7 +437,7 @@ public class Server extends ListenerAdapter {
   void report(DiscordPlayer reporter, BasePlayer reportee, String location, String description, String type,
       String incidentType, TextChannel channel) {
     EmbedBuilder emb = new EmbedBuilder();
-
+    App.log.info("TEST 2");
     emb.setAuthor(reporter.name, reporter.link,
         reporter.avatar);
 
@@ -467,6 +470,7 @@ public class Server extends ListenerAdapter {
   public void report(BasePlayer reporter, String location, BasePlayer reported, String args[])
       throws ConfigurationException {
     final TextChannel channel = getLogChannel();
+    App.log.info("TEST 1");
     getName(reporter, splayer -> {
       String type = "Unknown";
       String incidentSubType = "";
@@ -497,6 +501,19 @@ public class Server extends ListenerAdapter {
     if (event.isWebhookMessage() || event.getAuthor().getIdLong() == jda.getSelfUser().getIdLong())
       return;
     String message = event.getMessage().getContentDisplay();
+    if (message.startsWith(">")) {
+      switch (message) {
+        case (">online"):
+          event.getChannel().sendMessage("There are " + app.getServer().getOnlinePlayers().size() + " players online!")
+              .submit();
+          return;
+        case (">help"):
+          event.getChannel().sendMessage("# User commands:\n- >online => Get the number of online players")
+              .submit();
+          return;
+      }
+    }
+
     if (message.startsWith("!") && info != null && event.getAuthor().getIdLong() == info.getOwner().getIdLong()) {
       try {
         switch (message) {
@@ -537,6 +554,11 @@ public class Server extends ListenerAdapter {
             }
             return;
 
+          case ("!help"):
+            event.getChannel().sendMessage(
+                "# Admin commands:\n- !link => Link a channel to the server console.\n- !log=> Link a channel to use for the purposes of logging events.\n- !reset => Relink to a new discord server.")
+                .submit();
+            return;
         }
       } catch (IOException e) {
         // TODO Auto-generated catch block
@@ -544,7 +566,6 @@ public class Server extends ListenerAdapter {
       }
 
     }
-    App.log.info(message);
     Map<Long, UUID> users = userLink.inverse();
     if (!event.isFromGuild()) {
       String code = message.replaceAll("[^\\d.]", "");

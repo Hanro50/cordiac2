@@ -49,10 +49,8 @@ public class Parser {
             for (Manifest manifest : manifests.versions) {
                 App.getInstance().getLogger().info(manifest.id + "<===>" + App.getInstance().getMinecraftVersion());
                 if (manifest.id.startsWith(App.getInstance().getMinecraftVersion())) {
-                    System.out.println(gson.toJson(manifest));
                     String data2 = new String(Util.readAndClose(new URL(manifest.url).openStream()));
                     Version versionJson = gson.fromJson(data2, Version.class);
-                    System.out.println(versionJson.assetIndex.url);
                     assets = new String(Util.readAndClose(new URL(versionJson.assetIndex.url).openStream()));
                     Util.write(sFile, assets);
                     break;

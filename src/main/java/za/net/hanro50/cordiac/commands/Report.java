@@ -23,22 +23,22 @@ public class Report extends Base {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> result = new ArrayList<>();
-        App.log.info(args.length + "");
+        // App.log.info(args.length + "");
         if (args.length <= 1) {
             result.add("player");
             result.add("incident");
         } else if (args.length == 2) {
             if (args[0].equals("player")) {
                 plugin.getServer().getOnlinePlayers().forEach(players -> {
-                    result.add(players.getDisplayName());
+                    result.add(players.getName());
                 });
             } else if (args[0].equals("incident")) {
                 result.addAll(Config.reports());
             }
         }
-        for (String string : args) {
-            App.log.info(string);
-        }
+        // for (String string : args) {
+        // App.log.info(string);
+        // }
         return result;
     }
 
@@ -57,7 +57,9 @@ public class Report extends Base {
         }
         UUID fuuid = uuid;
         plugin.getPlayer(sender.getUniqueId(), (player) -> {
+            App.log.info(fuuid + "");
             if (fuuid != null) {
+                App.log.info("Route 1");
                 plugin.getPlayer(fuuid, (reported) -> {
                     try {
                         plugin.discord.report(player, location, reported, args);
@@ -68,11 +70,16 @@ public class Report extends Base {
                     }
                 });
             } else {
+                App.log.info("Route 2");
                 try {
                     plugin.discord.report(player, location, null, args);
                     sender.sendMessage("Sent in report to admin!");
                 } catch (ConfigurationException e) {
                     sender.sendMessage("It seems this server has yet to configure this feature!");
+                } catch (Throwable e) {
+
+                    e.printStackTrace();
+                    sender.sendMessage("Something went wrong :(");
                 }
             }
 
